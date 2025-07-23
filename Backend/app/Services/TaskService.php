@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Contract\TaskInterface;
+use App\Contracts\TaskInterface;
 use App\DTO\TaskDTO;
 use App\Enum\TaskStatus;
 use App\Models\Task;

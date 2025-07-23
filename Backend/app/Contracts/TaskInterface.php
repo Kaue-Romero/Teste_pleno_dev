@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contract;
+namespace App\Contracts;
 
 use App\DTO\TaskDTO;
 use App\Enum\TaskStatus;

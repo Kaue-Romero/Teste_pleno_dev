@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Contract\TaskInterface;
+use App\Contracts\TaskInterface;
 use App\Http\Requests\TaskRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -44,6 +44,7 @@ class TaskController extends Controller
     public function store(TaskRequest $request)
     {
         try {
+            dd($request->all());
             $validatedData = $request->validated();
             $task = $this->taskInterface->create(
                 $validatedData['title'],
