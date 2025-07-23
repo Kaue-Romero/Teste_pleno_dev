@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TaskCard from "./components/TaskCard";
-import { addTodo, cancelEdit, saveEdit } from "./store/todoSlices";
+import { addTodo, cancelEdit, saveEdit, setTodos } from "./store/todoSlices";
+import { getAllItems } from "./utils/axiosInstance";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -10,6 +11,18 @@ const App = () => {
   );
   const [newTodo, setNewTodo] = useState("");
   const [newTodoDescription, setNewTodoDescription] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const items = await getAllItems();
+        dispatch(setTodos(items.data));
+        console.log("Fetched todo items:", items);
+      } catch (error) {
+        console.error("Error fetching todo items:", error);
+      }
+    })();
+  }, []);
 
   const handleAdd = () => {
     if (!newTodo.trim()) return;
@@ -28,13 +41,15 @@ const App = () => {
     if (e.key === "Escape") dispatch(cancelEdit());
   };
 
-  const filteredTodos = todos.filter((todo) =>
-    filter === "all"
-      ? true
-      : filter === "active"
-        ? !todo.completed
-        : todo.completed
-  );
+  const filteredTodos = Array.isArray(todos)
+    ? todos.filter((todo) =>
+        filter === "all"
+          ? true
+          : filter === "active"
+            ? !todo.completed
+            : todo.completed
+      )
+    : [];
 
   return (
     <div className="container bg-white p-4 rounded-3 shadow">

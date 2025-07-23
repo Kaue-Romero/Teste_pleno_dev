@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { addItem } from '../utils/axiosInstance';
 
 export interface Todo {
     id: number;
@@ -35,6 +36,9 @@ const todoSlice = createSlice({
                 todo.completed = action.payload.status === 'concluded';
             }
         },
+        setTodos(state, action: PayloadAction<Todo[]>) {
+            state.todos = action.payload;
+        },
         addTodo(state, action: PayloadAction<{ text: string; description: string }>) {
             const newTodo: Todo = {
                 id: Date.now(),
@@ -44,6 +48,11 @@ const todoSlice = createSlice({
                 status: 'pending',
                 createdAt: new Date().toLocaleString(),
             };
+            addItem(newTodo).then((response) => {
+                console.log('Todo added successfully:', response.data);
+            }).catch((error) => {
+                console.error('Error adding todo:', error);
+            });
             state.todos.push(newTodo);
         },
         toggleTodo(state, action: PayloadAction<number>) {
@@ -103,6 +112,7 @@ export const {
     setEditingTextDescription,
     clearCompleted,
     setFilter,
+    setTodos,
     updateTodoStatus,
 } = todoSlice.actions;
 
