@@ -1,35 +1,94 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import TaskCard from "./components/TaskCard";
+import { addTodo, cancelEdit, saveEdit } from "./store/todoSlices";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const dispatch = useDispatch();
+  const { todos, editingId, editingText, filter } = useSelector(
+    (state) => state.todo
+  );
+  const [newTodo, setNewTodo] = useState("");
+  const [newTodoDescription, setNewTodoDescription] = useState("");
+
+  const handleAdd = () => {
+    if (!newTodo.trim()) return;
+    dispatch(
+      addTodo({
+        text: newTodo,
+        description: newTodoDescription,
+      })
+    );
+    setNewTodo("");
+    setNewTodoDescription("");
+  };
+
+  const handleEditKeyPress = (e) => {
+    if (e.key === "Enter") dispatch(saveEdit());
+    if (e.key === "Escape") dispatch(cancelEdit());
+  };
+
+  const filteredTodos = todos.filter((todo) =>
+    filter === "all"
+      ? true
+      : filter === "active"
+        ? !todo.completed
+        : todo.completed
+  );
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="container bg-white p-4 rounded-3 shadow">
+      <h2 className="text-center mb-4 text-dark">My Todo List</h2>
+      <div className="input-group mb-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Add a new task..."
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleAdd();
+          }}
+        />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
 
-export default App
+      <div className="input-group mb-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Description (optional)"
+          value={newTodoDescription}
+          onChange={(e) => setNewTodoDescription(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleAdd();
+          }}
+        />
+      </div>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <button className="btn btn-primary mb-3" onClick={handleAdd}>
+          <i className="bi bi-plus"></i> Add
+        </button>
+      </div>
+
+      <div>
+        {todos.length === 0 ? (
+          <div>
+            <span className="text-center text-muted">No tasks available.</span>
+          </div>
+        ) : (
+          filteredTodos.map((todo, index) => (
+            <TaskCard
+              key={todo.id}
+              todo={todo}
+              editingId={editingId}
+              editingText={editingText}
+              handleEditKeyPress={handleEditKeyPress}
+            />
+          ))
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default App;
