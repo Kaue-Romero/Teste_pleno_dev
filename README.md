@@ -1,3 +1,5 @@
+<img width="857" height="500" alt="image" src="https://github.com/user-attachments/assets/fe422005-f769-487b-9dbc-e15ecca84dbc" />
+
 # 🗂️ Gerenciador de Tarefas
 
 Este projeto é uma aplicação de gerenciamento de tarefas full-stack, desenvolvida como parte de um teste técnico. Ele permite criar, listar, atualizar e excluir tarefas, com um backend em PHP, um frontend em React (com Vite) e um ambiente Docker para fácil configuração e execução.
