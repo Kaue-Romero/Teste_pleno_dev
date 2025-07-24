@@ -36,14 +36,12 @@ class TaskService implements TaskInterface
     public function create(
         string $title,
         ?string $description = null,
-        TaskStatus $status = TaskStatus::PENDING,
-        bool $completed = false
     ): TaskDTO {
         $data = [
             'title' => $title,
             'description' => $description,
-            'status' => $status->value,
-            'completed' => $completed,
+            'status' => TaskStatus::PENDING->value,
+            'completed' => false,
         ];
 
         $task = Task::create($data);

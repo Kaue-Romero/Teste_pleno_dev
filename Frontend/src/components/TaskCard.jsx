@@ -31,6 +31,7 @@ export default function TaskCard({ todo }) {
     >
       <div className="d-flex align-items-center flex-grow-1 me-3">
         <select
+          id={"Status" + todo.id}
           className="form-select form-select-sm w-auto me-3"
           value={todo.status}
           onChange={(e) =>
@@ -45,18 +46,19 @@ export default function TaskCard({ todo }) {
 
         <div className="flex-grow-1">
           {editingId === todo.id ? (
-            <div className="input-group input-group-sm">
-              <div className="input-group-text flex flex-column">
+            <div className="d-flex w-100 gap-2 align-items-start">
+              <div className="d-flex flex-column flex-grow-1 gap-2">
                 <input
-                  type="text"
                   className="form-control"
+                  type="text"
+                  placeholder={todo.title}
                   value={editingText}
                   onChange={(e) => dispatch(setEditingText(e.target.value))}
-                  autoFocus
                 />
                 <input
-                  type="text"
                   className="form-control"
+                  type="text"
+                  placeholder={todo.description}
                   value={editingTextDescription}
                   onChange={(e) =>
                     dispatch(setEditingTextDescription(e.target.value))
@@ -64,20 +66,21 @@ export default function TaskCard({ todo }) {
                   onKeyDown={handleEditKeyPress}
                 />
               </div>
-              <button
-                className="btn btn-success"
-                onClick={() => dispatch(saveEdit())}
-                title="Save"
-              >
-                <i className="bi bi-check"></i>
-              </button>
-              <button
-                className="btn btn-secondary"
-                onClick={() => dispatch(cancelEdit())}
-                title="Cancel"
-              >
-                <i className="bi bi-x"></i>
-              </button>
+
+              <div className="d-flex flex-row gap-2 mt-auto">
+                <button
+                  className="btn btn-success"
+                  onClick={() => dispatch(saveEdit())}
+                >
+                  <i className="bi bi-check"></i>
+                </button>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => dispatch(cancelEdit())}
+                >
+                  <i className="bi bi-x"></i>
+                </button>
+              </div>
             </div>
           ) : (
             <div className="d-flex flex-column gap-1">
@@ -87,9 +90,9 @@ export default function TaskCard({ todo }) {
                     todo.completed ? "text-decoration-line-through" : ""
                   }`}
                   style={{ maxWidth: "250px" }}
-                  title={todo.text}
+                  title={todo.title}
                 >
-                  {todo.text}
+                  {todo.title}
                 </span>
                 <div
                   className={`text-muted ${todo.completed ? "text-decoration-line-through" : ""}`}
@@ -105,10 +108,22 @@ export default function TaskCard({ todo }) {
                 >
                   {todo.description}
                 </div>
-
-               
               </>
-              <small className="text-muted">Created: {todo.createdAt}</small>
+              <small className="text-muted">
+                Created:{" "}
+                {new Intl.DateTimeFormat("pt-BR", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }).format(
+                  (() => {
+                    const d = new Date(todo.created_at);
+                    return isNaN(d.getTime()) ? new Date() : d;
+                  })()
+                )}
+              </small>
             </div>
           )}
         </div>
@@ -119,7 +134,13 @@ export default function TaskCard({ todo }) {
           <button
             className="btn btn-outline-primary btn-sm"
             onClick={() =>
-              dispatch(startEditing({ id: todo.id, text: todo.text, description: todo.description }))
+              dispatch(
+                startEditing({
+                  id: todo.id,
+                  text: todo.text,
+                  description: todo.description,
+                })
+              )
             }
             title="Edit"
           >

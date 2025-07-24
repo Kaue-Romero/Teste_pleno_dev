@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\TaskInterface;
-use App\Http\Requests\TaskRequest;
+use App\Enum\TaskStatus;
+use App\Http\Requests\Task\CreateTaskRequest;
+use App\Http\Requests\Task\UpdateTaskRequest;
+use App\Models\Task;
 use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
@@ -41,16 +44,13 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(TaskRequest $request)
+    public function store(CreateTaskRequest $request)
     {
         try {
-            dd($request->all());
             $validatedData = $request->validated();
             $task = $this->taskInterface->create(
                 $validatedData['title'],
-                $validatedData['description'] ?? null,
-                $validatedData['status'],
-                $validatedData['completed'] ?? false
+                $validatedData['description'] ?? null
             );
             return response()->json($task, 201);
         } catch (\Exception $e) {
@@ -62,15 +62,16 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(TaskRequest $request, int $id)
+    public function update(UpdateTaskRequest $request, int $id)
     {
         try {
             $validatedData = $request->validated();
+            $status = isset($validatedData['status']) ? TaskStatus::from($validatedData['status']) : null;
             $task = $this->taskInterface->update(
                 $id,
                 $validatedData['title'] ?? null,
                 $validatedData['description'] ?? null,
-                $validatedData['status'] ?? null,
+                $status,
                 $validatedData['completed'] ?? null
             );
             return response()->json($task);

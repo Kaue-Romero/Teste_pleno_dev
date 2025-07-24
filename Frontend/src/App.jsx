@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import TaskCard from "./components/TaskCard";
 import { addTodo, cancelEdit, saveEdit, setTodos } from "./store/todoSlices";
@@ -36,6 +37,15 @@ const App = () => {
     setNewTodoDescription("");
   };
 
+  const handleRefresh = async () => {
+    try {
+      dispatch(setTodos([]));
+      const items = await getAllItems();
+      dispatch(setTodos(items.data));
+    } catch (error) {
+    }
+  };
+
   const handleEditKeyPress = (e) => {
     if (e.key === "Enter") dispatch(saveEdit());
     if (e.key === "Escape") dispatch(cancelEdit());
@@ -53,6 +63,7 @@ const App = () => {
 
   return (
     <div className="container bg-white p-4 rounded-3 shadow">
+      <Toaster />
       <h2 className="text-center mb-4 text-dark">My Todo List</h2>
       <div className="input-group mb-3">
         <input
@@ -79,9 +90,12 @@ const App = () => {
           }}
         />
       </div>
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
         <button className="btn btn-primary mb-3" onClick={handleAdd}>
           <i className="bi bi-plus"></i> Add
+        </button>
+        <button className="btn btn-secondary mb-3" onClick={handleRefresh}>
+          <i className="bi bi-arrow-repeat"></i> Refresh
         </button>
       </div>
 

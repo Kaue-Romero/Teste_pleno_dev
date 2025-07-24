@@ -36,9 +36,7 @@ interface TaskInterface
      */
     public function create(
         string $title,
-        ?string $description = null,
-        TaskStatus $status = TaskStatus::PENDING,
-        bool $completed = false
+        ?string $description = null
     ): TaskDTO;
 
     /**

@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { addItem } from '../utils/axiosInstance';
+import { addItem, deleteItem, updateItem } from '../utils/axiosInstance';
 
 export interface Todo {
-    id: number;
-    text: string;
+    id?: number;
+    title: string;
     status: 'pending' | 'ongoing' | 'concluded';
     description?: string;
     completed: boolean;
-    createdAt: string;
+    createdAt?: string;
 }
 
 interface TodoState {
@@ -32,8 +32,15 @@ const todoSlice = createSlice({
         updateTodoStatus: (state, action: PayloadAction<{ id: number; status: Todo["status"] }>) => {
             const todo = state.todos.find((t) => t.id === action.payload.id);
             if (todo) {
+                updateItem(action.payload.id, { status: action.payload.status })
+                    .then((response) => {
+                        console.log('Todo status updated successfully:', response.data);
+                    })
+                    .catch((error) => {
+                        console.error('Error updating todo status:', error);
+                    });
                 todo.status = action.payload.status;
-                todo.completed = action.payload.status === 'concluded';
+
             }
         },
         setTodos(state, action: PayloadAction<Todo[]>) {
@@ -41,12 +48,10 @@ const todoSlice = createSlice({
         },
         addTodo(state, action: PayloadAction<{ text: string; description: string }>) {
             const newTodo: Todo = {
-                id: Date.now(),
-                text: action.payload.text.trim(),
+                title: action.payload.text.trim(),
                 completed: false,
                 description: action.payload.description.trim(),
                 status: 'pending',
-                createdAt: new Date().toLocaleString(),
             };
             addItem(newTodo).then((response) => {
                 console.log('Todo added successfully:', response.data);
@@ -55,31 +60,35 @@ const todoSlice = createSlice({
             });
             state.todos.push(newTodo);
         },
-        toggleTodo(state, action: PayloadAction<number>) {
-            const todo = state.todos.find((t) => t.id === action.payload);
-            if (todo) {
-                todo.completed = !todo.completed;
-            }
-        },
         deleteTodo(state, action: PayloadAction<number>) {
+            deleteItem(action.payload);
             state.todos = state.todos.filter((t) => t.id !== action.payload);
         },
         startEditing(state, action: PayloadAction<{
-            description: string; id: number; text: string
+            description: string; id: number; title: string
         }>) {
-            console.log('Starting edit for ID:', action.payload.id);
             state.editingId = action.payload.id;
-            state.editingText = action.payload.text;
+            state.editingText = action.payload.title;
             state.editingTextDescription = action.payload.description;
         },
         saveEdit(state) {
             if (state.editingId !== null) {
+                updateItem(state.editingId, {
+                    title: state.editingText.trim(),
+                    description: state.editingTextDescription.trim(),
+                }).then((response) => {
+                    console.log('Todo edited successfully:', response.data);
+                }).catch((error) => {
+                    console.error('Error editing todo:', error);
+                });
                 const todo = state.todos.find((t) => t.id === state.editingId);
                 if (todo) {
-                    todo.text = state.editingText;
+                    todo.title = state.editingText.trim();
+                    todo.description = state.editingTextDescription.trim();
                 }
                 state.editingId = null;
                 state.editingText = '';
+                state.editingTextDescription = '';
             }
         },
         cancelEdit(state) {
@@ -103,7 +112,6 @@ const todoSlice = createSlice({
 
 export const {
     addTodo,
-    toggleTodo,
     deleteTodo,
     startEditing,
     saveEdit,

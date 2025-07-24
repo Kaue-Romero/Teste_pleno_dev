@@ -1,45 +1,38 @@
 body {
-            font-family: 'Inter', sans-serif; /* Apply Inter font */
-            background-color: #f8f9fa; /* Light background */
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; /* Align to the top */
-            min-height: 100vh;
-            padding-top: 50px; /* Add some top padding */
-        }
-        .container {
-            max-width: 800px; /* Limit container width */
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 12px; /* Rounded corners for the container */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow */
-        }
-        .table {
-            margin-bottom: 0; /* Remove default table margin */
-        }
-        .table th, .table td {
-            vertical-align: middle; /* Center content vertically */
-            padding: 12px; /* More padding for cells */
-        }
-        .table thead th {
-            background-color: #0d6efd; /* Bootstrap primary blue for header */
-            color: white;
-            border-bottom: none; /* Remove border from header */
-        }
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(0, 0, 0, 0.03); /* Lighter stripe */
-        }
-        .table-bordered th, .table-bordered td {
-            border: 1px solid #dee2e6; /* Light grey border */
-        }
-        .badge {
-            padding: 0.5em 0.75em;
-            border-radius: 0.5rem; /* Rounded badge corners */
-            font-weight: 600;
-        }
-        .todo-item {
-  padding: 1rem;
-  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column; /* empilhar vertical */
+  align-items: center;    /* centralizar horizontal */
+  min-height: 100vh;
+  padding-top: 50px;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+}
+
+
+
+.todo-item {
+    padding: 1rem;
+    transition: all 0.2s ease;
 }
 
 .todo-item:hover {
