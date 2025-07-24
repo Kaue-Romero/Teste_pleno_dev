@@ -58,6 +58,7 @@ Comando:
 ```bash
 docker-compose up --build -d
 ```
+!SUPER IMPORTANTE: caso for a primeira vez rodando um container de Mysql espere até que o container suba por completo e reinice a stack!
 
 **4. Acesse a aplicação**  
 URL: http://localhost
