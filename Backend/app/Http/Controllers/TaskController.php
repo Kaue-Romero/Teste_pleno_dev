@@ -9,6 +9,8 @@ use App\Http\Requests\Task\UpdateTaskRequest;
 use App\Models\Task;
 use Illuminate\Support\Facades\Log;
 
+use function PHPUnit\Framework\isNan;
+
 class TaskController extends Controller
 {
     public function __construct(protected TaskInterface $taskInterface) {}
@@ -64,6 +66,12 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, int $id)
     {
+        if (is_nan($id)) {
+            return response()->json([
+                'error' => 'Invalid task ID. Must be a numeric value.'
+            ], 400);
+        }
+
         try {
             $validatedData = $request->validated();
             $status = isset($validatedData['status']) ? TaskStatus::from($validatedData['status']) : null;

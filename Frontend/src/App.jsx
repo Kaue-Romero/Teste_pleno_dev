@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import TaskCard from "./components/TaskCard";
 import { addTodo, cancelEdit, saveEdit, setTodos } from "./store/todoSlices";
 import { getAllItems } from "./utils/axiosInstance";
+import useToastChildrenChange from "./components/ToastChildrenChange";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -12,6 +13,11 @@ const App = () => {
   );
   const [newTodo, setNewTodo] = useState("");
   const [newTodoDescription, setNewTodoDescription] = useState("");
+
+  useToastChildrenChange(() => {
+    console.log("Toast children changed");
+    handleRefresh();
+  });
 
   useEffect(() => {
     (async () => {
@@ -25,7 +31,7 @@ const App = () => {
     })();
   }, []);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!newTodo.trim()) return;
     dispatch(
       addTodo({
@@ -42,8 +48,7 @@ const App = () => {
       dispatch(setTodos([]));
       const items = await getAllItems();
       dispatch(setTodos(items.data));
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const handleEditKeyPress = (e) => {
@@ -100,7 +105,7 @@ const App = () => {
       </div>
 
       <div>
-        {todos.length === 0 ? (
+        {todos && todos.length === 0 ? (
           <div>
             <span className="text-center text-muted">No tasks available.</span>
           </div>

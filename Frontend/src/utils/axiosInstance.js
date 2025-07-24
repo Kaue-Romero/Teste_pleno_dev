@@ -2,64 +2,12 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/",
+  baseURL: "http://localhost/",
   headers: {
     "Content-Type": "application/json",
   },
   withCredentials: true,
 });
-
-export async function getCSRFToken() {
-  return axiosInstance
-    .get("/sanctum/csrf-cookie", {
-      withCredentials: true,
-    })
-    .catch((error) => {
-      console.error("Error fetching CSRF token:", error);
-      toast.error(
-        "Failed to fetch CSRF token: " + error.response?.data?.message ||
-          error.message
-      );
-      throw error;
-    });
-}
-
-export async function login({email, password}) {
-  return axiosInstance
-    .post("/login", { email, password })
-    .then((response) => {
-      if (response.data.token) {
-        toast.success("Login successful!");
-        window.location.href = "/";
-      } else {
-        toast.error("Login failed. Please try again.");
-      }
-      return response.data;
-    })
-    .catch((error) => {
-      console.error("Error during login:", error);
-      toast.error(
-        "Login failed: " + error.response?.data?.message || error.message
-      );
-      throw error;
-    });
-}
-
-export async function register({email, name, password, password_confirmation}) {
-  return axiosInstance
-    .post("/register", { email, name, password, password_confirmation })
-    .then(() => {
-      toast.success("Registration successful!");
-      window.location.href = "/login";
-    })
-    .catch((error) => {
-      console.error("Error during registration:", error);
-      toast.error(
-        error.response?.data?.message || error.message
-      );
-      throw error;
-    });
-}
 
 export async function getAllItems() {
   return (await axiosInstance.get("/api/tasks")).data;

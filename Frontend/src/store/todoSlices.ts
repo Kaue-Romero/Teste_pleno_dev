@@ -58,11 +58,9 @@ const todoSlice = createSlice({
             }).catch((error) => {
                 console.error('Error adding todo:', error);
             });
-            state.todos.push(newTodo);
         },
         deleteTodo(state, action: PayloadAction<number>) {
             deleteItem(action.payload);
-            state.todos = state.todos.filter((t) => t.id !== action.payload);
         },
         startEditing(state, action: PayloadAction<{
             description: string; id: number; title: string

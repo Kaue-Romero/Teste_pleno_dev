@@ -137,7 +137,7 @@ export default function TaskCard({ todo }) {
               dispatch(
                 startEditing({
                   id: todo.id,
-                  text: todo.text,
+                  title: todo.title,
                   description: todo.description,
                 })
               )
