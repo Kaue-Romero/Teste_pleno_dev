@@ -53,6 +53,16 @@ git clone [URL_DO_SEU_REPOSITORIO]
 cd [NOME_DO_SEU_REPOSITORIO]
 ```
 
+**3. Coloque as credenciais do banco no .env**
+```bash
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=laravel
+DB_PASSWORD=secret
+```
+
 **3. Suba os containers**  
 Comando:  
 ```bash
