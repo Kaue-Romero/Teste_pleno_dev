@@ -26,7 +26,7 @@ class TaskService implements TaskInterface
             $task->id,
             $task->title,
             $task->description,
-            $task->status,
+            TaskStatus::from($task->status),
             $task->completed,
             $task->created_at,
             $task->updated_at
