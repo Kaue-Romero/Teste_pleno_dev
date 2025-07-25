@@ -37,7 +37,7 @@ Tecnologia: Frontend (React + Vite)
 Tecnologia: Docker
 - Containers: PHP, Apache/Nginx, MySQL  
 - docker-compose.yml para orquestração  
-- Executado em: http://localhost:9000
+- Executado em: http://localhost
 
 ---
 
